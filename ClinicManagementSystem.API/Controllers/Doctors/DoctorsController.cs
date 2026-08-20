@@ -63,5 +63,13 @@ namespace ClinicManagementSystem.API.Controllers.Doctors
 				Message = "Doctor updated successfully."
 			});
 		}
+
+		[HttpDelete("{doctorId:guid}")]
+		public async Task<IActionResult> Delete(Guid doctorId)
+		{
+			var deleted = await _doctorService.DeleteAsync(doctorId);
+
+			return deleted ? NoContent() : NotFound();
+		}
 	}
 }

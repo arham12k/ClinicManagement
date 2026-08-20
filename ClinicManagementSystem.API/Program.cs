@@ -1,10 +1,13 @@
 using ClinicManagementSystem.Application.Interfaces;
 using ClinicManagementSystem.Application.Interfaces.Doctors;
+using ClinicManagementSystem.Application.Interfaces.Patients;
 using ClinicManagementSystem.Application.Services;
 using ClinicManagementSystem.Application.Services.Doctors;
+using ClinicManagementSystem.Application.Services.Patients;
 using ClinicManagementSystem.Infrastructure.Data;
 using ClinicManagementSystem.Infrastructure.Repositories;
 using ClinicManagementSystem.Infrastructure.Repositories.Doctors;
+using ClinicManagementSystem.Infrastructure.Repositories.Patients;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -21,6 +24,8 @@ builder.Services.AddScoped<IClinicService, ClinicService>();
 
 builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IPatientService, PatientService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

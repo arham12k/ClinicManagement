@@ -18,6 +18,9 @@ namespace ClinicManagementSystem.Application.Interfaces.Doctors
 		Task<Doctor?> GetByMedicalRegistrationNumberAsync(string registrationNumber);
 
 		Task<bool> UpdateAsync(Doctor doctor, List<DoctorAvailability> availability);
+
+		Task<bool> DeleteAsync(Guid doctorId);
+
 		Task<IEnumerable<DoctorAvailability>> GetAvailabilityAsync(Guid doctorId);
 	}
 }

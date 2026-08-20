@@ -16,5 +16,7 @@ namespace ClinicManagementSystem.Application.Interfaces.Doctors
 		Task<DoctorResponse?> GetByIdAsync(Guid doctorId);
 
 		Task<bool> UpdateAsync(Guid doctorId, UpdateDoctorRequest request);
+
+		Task<bool> DeleteAsync(Guid doctorId);
 	}
 }

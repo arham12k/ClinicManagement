@@ -38,23 +38,60 @@ public class ClinicService : IClinicService
 		return await _repository.CreateAsync(clinic);
 	}
 
-	public Task<bool> DeleteAsync(Guid clinicId)
+	public async Task<bool> DeleteAsync(Guid clinicId)
 	{
-		throw new NotImplementedException();
+		return await _repository.DeleteAsync(clinicId);
 	}
 
-	public Task<IEnumerable<ClinicResponse>> GetAllAsync()
+	public async Task<IEnumerable<ClinicResponse>> GetAllAsync()
 	{
-		throw new NotImplementedException();
+		var clinics = await _repository.GetAllAsync();
+
+		return clinics.Select(MapClinicResponse);
 	}
 
-	public Task<ClinicResponse?> GetByIdAsync(Guid clinicId)
+	public async Task<ClinicResponse?> GetByIdAsync(Guid clinicId)
 	{
-		throw new NotImplementedException();
+		var clinic = await _repository.GetByIdAsync(clinicId);
+
+		return clinic == null ? null : MapClinicResponse(clinic);
 	}
 
-	public Task<bool> UpdateAsync(Guid clinicId, CreateClinicRequest request)
+	public async Task<bool> UpdateAsync(Guid clinicId, CreateClinicRequest request)
 	{
-		throw new NotImplementedException();
+		var clinic = await _repository.GetByIdAsync(clinicId);
+
+		if (clinic == null)
+			return false;
+
+		var existingClinic = await _repository.GetByEmailAsync(request.Email);
+
+		if (existingClinic != null && existingClinic.ClinicId != clinicId)
+			throw new Exception("Clinic already exists with this email.");
+
+		clinic.ClinicName = request.ClinicName;
+		clinic.OwnerName = request.OwnerName;
+		clinic.MobileNumber = request.MobileNumber;
+		clinic.Email = request.Email;
+		clinic.Address = request.Address;
+		clinic.City = request.City;
+		clinic.State = request.State;
+		clinic.Pincode = request.Pincode;
+		clinic.UpdatedOn = DateTime.UtcNow;
+
+		return await _repository.UpdateAsync(clinic);
 	}
+
+	private static ClinicResponse MapClinicResponse(Clinic clinic) => new()
+	{
+		ClinicId = clinic.ClinicId,
+		ClinicName = clinic.ClinicName,
+		OwnerName = clinic.OwnerName,
+		MobileNumber = clinic.MobileNumber,
+		Email = clinic.Email,
+		Address = clinic.Address,
+		City = clinic.City,
+		State = clinic.State,
+		Pincode = clinic.Pincode
+	};
 }

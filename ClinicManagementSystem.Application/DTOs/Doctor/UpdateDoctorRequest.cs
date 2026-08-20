@@ -10,7 +10,7 @@ namespace ClinicManagementSystem.Application.DTOs.Doctor
 	{
 		public string FullName { get; set; } = string.Empty;
 
-		public DateTime DateOfBirth { get; set; }
+		public DateOnly DateOfBirth { get; set; }
 
 		public string Gender { get; set; } = string.Empty;
 

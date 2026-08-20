@@ -12,8 +12,8 @@ namespace ClinicManagementSystem.Application.DTOs.Doctor
 
 		public List<string> Days { get; set; } = new();
 
-		public TimeSpan From { get; set; }
+		public TimeOnly From { get; set; }
 
-		public TimeSpan To { get; set; }
+		public TimeOnly To { get; set; }
 	}
 }

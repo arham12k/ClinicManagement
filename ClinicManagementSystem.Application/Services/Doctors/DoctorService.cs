@@ -170,6 +170,11 @@ namespace ClinicManagementSystem.Application.Services.Doctors
 				availability);
 		}
 
+		public async Task<bool> DeleteAsync(Guid doctorId)
+		{
+			return await _doctorRepository.DeleteAsync(doctorId);
+		}
+
 
 
 

@@ -136,7 +136,7 @@ ORDER BY Full_Name;";
 			const string sql = @"
 SELECT *
 FROM Doctors
-WHERE Doctor_Id = @DoctorId;";
+WHERE Doctor_Id = @DoctorId AND Is_Active = TRUE;";
 
 			return await connection.QueryFirstOrDefaultAsync<Doctor>(
 				sql,
@@ -151,7 +151,7 @@ WHERE Doctor_Id = @DoctorId;";
 			const string sql = @"
 SELECT *
 FROM Doctors
-WHERE Medical_Registration_Number=@RegistrationNumber
+WHERE Medical_Registration_Number=@RegistrationNumber AND Is_Active = TRUE
 LIMIT 1;";
 
 			return await connection.QueryFirstOrDefaultAsync<Doctor>(
@@ -251,6 +251,22 @@ VALUES
 				transaction.Rollback();
 				throw;
 			}
+		}
+
+		public async Task<bool> DeleteAsync(Guid doctorId)
+		{
+			using var connection = _context.CreateConnection();
+
+			const string sql = @"
+UPDATE Doctors
+SET
+    Is_Active = FALSE,
+    Updated_On = @UpdatedOn
+WHERE Doctor_Id = @DoctorId AND Is_Active = TRUE;";
+
+			return await connection.ExecuteAsync(
+				sql,
+				new { DoctorId = doctorId, UpdatedOn = DateTime.UtcNow }) > 0;
 		}
 
 

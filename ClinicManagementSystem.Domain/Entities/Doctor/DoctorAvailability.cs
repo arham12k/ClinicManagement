@@ -16,8 +16,8 @@ namespace ClinicManagementSystem.Domain.Entities.Doctor
 
 		public string DayOfWeek { get; set; } = string.Empty;
 
-		public TimeSpan FromTime { get; set; }
+		public TimeOnly FromTime { get; set; }
 
-		public TimeSpan ToTime { get; set; }
+		public TimeOnly ToTime { get; set; }
 	}
 }

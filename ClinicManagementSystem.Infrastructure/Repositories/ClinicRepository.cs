@@ -58,7 +58,7 @@ VALUES
 		using var connection = _context.CreateConnection();
 
 		var sql = @"SELECT * FROM Clinics
-                    WHERE Email=@Email
+					WHERE Email=@Email AND Is_Active = TRUE
                     LIMIT 1;";
 
 		return await connection.QueryFirstOrDefaultAsync<Clinic>(sql, new { Email = email });
@@ -69,7 +69,7 @@ VALUES
 		using var connection = _context.CreateConnection();
 
 		var sql = @"SELECT * FROM Clinics
-                    WHERE Clinic_Id=@ClinicId;";
+					WHERE Clinic_Id=@ClinicId AND Is_Active = TRUE;";
 
 		return await connection.QueryFirstOrDefaultAsync<Clinic>(sql, new { ClinicId = clinicId });
 	}
@@ -79,18 +79,46 @@ VALUES
 		using var connection = _context.CreateConnection();
 
 		var sql = @"SELECT * FROM Clinics
+					WHERE Is_Active = TRUE
                     ORDER BY Created_On DESC;";
 
 		return await connection.QueryAsync<Clinic>(sql);
 	}
 
-	public Task<bool> UpdateAsync(Clinic clinic)
+	public async Task<bool> UpdateAsync(Clinic clinic)
 	{
-		throw new NotImplementedException();
+		using var connection = _context.CreateConnection();
+
+		const string sql = @"
+UPDATE Clinics
+SET
+    Clinic_Name = @ClinicName,
+    Owner_Name = @OwnerName,
+    Mobile_Number = @MobileNumber,
+    Email = @Email,
+    Address = @Address,
+    City = @City,
+    State = @State,
+    Pincode = @Pincode,
+    Updated_On = @UpdatedOn
+WHERE Clinic_Id = @ClinicId AND Is_Active = TRUE;";
+
+		return await connection.ExecuteAsync(sql, clinic) > 0;
 	}
 
-	public Task<bool> DeleteAsync(Guid clinicId)
+	public async Task<bool> DeleteAsync(Guid clinicId)
 	{
-		throw new NotImplementedException();
+		using var connection = _context.CreateConnection();
+
+		const string sql = @"
+UPDATE Clinics
+SET
+    Is_Active = FALSE,
+    Updated_On = @UpdatedOn
+WHERE Clinic_Id = @ClinicId AND Is_Active = TRUE;";
+
+		return await connection.ExecuteAsync(
+			sql,
+			new { ClinicId = clinicId, UpdatedOn = DateTime.UtcNow }) > 0;
 	}
 }
