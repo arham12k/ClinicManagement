@@ -1,0 +1,15 @@
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\bin\Debug\net8.0\ClinicManagementSystem.Application.deps.json
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\bin\Debug\net8.0\ClinicManagementSystem.Application.dll
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\bin\Debug\net8.0\ClinicManagementSystem.Application.pdb
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\bin\Debug\net8.0\ClinicManagementSystem.Domain.dll
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\bin\Debug\net8.0\ClinicManagementSystem.Domain.pdb
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\obj\Debug\net8.0\ClinicManagementSystem.Application.csproj.AssemblyReference.cache
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\obj\Debug\net8.0\ClinicManagementSystem.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\obj\Debug\net8.0\ClinicManagementSystem.Application.AssemblyInfoInputs.cache
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\obj\Debug\net8.0\ClinicManagementSystem.Application.AssemblyInfo.cs
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\obj\Debug\net8.0\ClinicManagementSystem.Application.csproj.CoreCompileInputs.cache
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\obj\Debug\net8.0\ClinicMa.702F51B0.Up2Date
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\obj\Debug\net8.0\ClinicManagementSystem.Application.dll
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\obj\Debug\net8.0\refint\ClinicManagementSystem.Application.dll
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\obj\Debug\net8.0\ClinicManagementSystem.Application.pdb
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Application\obj\Debug\net8.0\ref\ClinicManagementSystem.Application.dll

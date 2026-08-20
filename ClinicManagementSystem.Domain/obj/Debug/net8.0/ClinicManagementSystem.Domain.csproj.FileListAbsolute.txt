@@ -1,0 +1,11 @@
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Domain\bin\Debug\net8.0\ClinicManagementSystem.Domain.deps.json
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Domain\bin\Debug\net8.0\ClinicManagementSystem.Domain.dll
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Domain\bin\Debug\net8.0\ClinicManagementSystem.Domain.pdb
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Domain\obj\Debug\net8.0\ClinicManagementSystem.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Domain\obj\Debug\net8.0\ClinicManagementSystem.Domain.AssemblyInfoInputs.cache
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Domain\obj\Debug\net8.0\ClinicManagementSystem.Domain.AssemblyInfo.cs
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Domain\obj\Debug\net8.0\ClinicManagementSystem.Domain.csproj.CoreCompileInputs.cache
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Domain\obj\Debug\net8.0\ClinicManagementSystem.Domain.dll
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Domain\obj\Debug\net8.0\refint\ClinicManagementSystem.Domain.dll
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Domain\obj\Debug\net8.0\ClinicManagementSystem.Domain.pdb
+D:\clinicManagementSystem\ClinicManagementSystem\ClinicManagementSystem.Domain\obj\Debug\net8.0\ref\ClinicManagementSystem.Domain.dll
