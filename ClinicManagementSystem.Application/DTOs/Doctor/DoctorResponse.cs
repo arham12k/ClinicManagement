@@ -1,24 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClinicManagementSystem.Application.DTOs.Doctor
 {
 	public class DoctorResponse
 	{
-		//public Guid DoctorId { get; set; }
-
-		//public string FullName { get; set; } = string.Empty;
-
-		//public string Specialization { get; set; } = string.Empty;
-
-		//public decimal ConsultationFees { get; set; }
-
 		public Guid DoctorId { get; set; }
 
-		public Guid ClinicId { get; set; }
+		public Guid? ClinicId { get; set; }
 
 		public string FullName { get; set; } = string.Empty;
 
@@ -38,12 +27,31 @@ namespace ClinicManagementSystem.Application.DTOs.Doctor
 
 		public string SubSpecialization { get; set; } = string.Empty;
 
-		public int ExperienceYears { get; set; }
+		public string Experience { get; set; } = string.Empty;
 
 		public string Qualification { get; set; } = string.Empty;
 
 		public decimal ConsultationFees { get; set; }
 
-		public List<SessionResponse> Availability { get; set; } = new();
+		public List<string> AvailableDays { get; set; } = new();
+
+		public SessionResponse? MorningSession { get; set; }
+
+		public SessionResponse? EveningSession { get; set; }
+
+		public List<DoctorAvailabilityItemResponse> Availability { get; set; } = new();
+	}
+
+	public class DoctorAvailabilityItemResponse
+	{
+		public Guid AvailabilityId { get; set; }
+
+		public string SessionType { get; set; } = string.Empty;
+
+		public string DayOfWeek { get; set; } = string.Empty;
+
+		public string FromTime { get; set; } = string.Empty;
+
+		public string ToTime { get; set; } = string.Empty;
 	}
 }

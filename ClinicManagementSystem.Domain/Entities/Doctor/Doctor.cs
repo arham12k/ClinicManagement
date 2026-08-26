@@ -6,7 +6,7 @@ public class Doctor: AuditableEntity
 {
 	public Guid DoctorId { get; set; }
 
-	public Guid ClinicId { get; set; }
+	public Guid? ClinicId { get; set; }
 
 	public string FullName { get; set; } = string.Empty;
 
@@ -26,9 +26,11 @@ public class Doctor: AuditableEntity
 
 	public string SubSpecialization { get; set; } = string.Empty;
 
-	public int ExperienceYears { get; set; }
+	public string Experience { get; set; } = string.Empty;
 
 	public string Qualification { get; set; } = string.Empty;
 
 	public decimal ConsultationFees { get; set; }
+
+	public string AvailableDays { get; set; } = string.Empty;
 }

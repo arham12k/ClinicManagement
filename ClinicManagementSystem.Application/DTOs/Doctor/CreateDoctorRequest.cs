@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace ClinicManagementSystem.Application.DTOs.Doctor
 {
 	public class CreateDoctorRequest
 	{
-		public Guid ClinicId { get; set; }
+		public Guid? ClinicId { get; set; }
 
 		public string FullName { get; set; } = string.Empty;
 
-		public DateOnly DateOfBirth { get; set; }
+		public DateOnly? DateOfBirth { get; set; }
 
 		public string Gender { get; set; } = string.Empty;
 
@@ -28,11 +26,14 @@ namespace ClinicManagementSystem.Application.DTOs.Doctor
 
 		public string SubSpecialization { get; set; } = string.Empty;
 
-		public int ExperienceYears { get; set; }
+		public string Experience { get; set; } = string.Empty;
 
 		public string Qualification { get; set; } = string.Empty;
 
+		[JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
 		public decimal ConsultationFees { get; set; }
+
+		public List<string> AvailableDays { get; set; } = new();
 
 		public SessionRequest? MorningSession { get; set; }
 

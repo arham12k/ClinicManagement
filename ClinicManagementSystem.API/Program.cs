@@ -8,11 +8,20 @@ using ClinicManagementSystem.Infrastructure.Data;
 using ClinicManagementSystem.Infrastructure.Repositories;
 using ClinicManagementSystem.Infrastructure.Repositories.Doctors;
 using ClinicManagementSystem.Infrastructure.Repositories.Patients;
+using System.Text.Json.Serialization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.NumberHandling =
+            JsonNumberHandling.AllowReadingFromString |
+            JsonNumberHandling.WriteAsString;
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

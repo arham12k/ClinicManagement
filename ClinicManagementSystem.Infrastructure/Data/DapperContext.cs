@@ -14,6 +14,7 @@ public class DapperContext
 		_configuration = configuration;
 		DefaultTypeMap.MatchNamesWithUnderscores = true;
 		SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
+		SqlMapper.AddTypeHandler(new TimeOnlyTypeHandler());
 	}
 
 	public IDbConnection CreateConnection()
@@ -35,6 +36,23 @@ public class DapperContext
 		{
 			parameter.DbType = DbType.Date;
 			parameter.Value = value.ToDateTime(TimeOnly.MinValue);
+		}
+	}
+
+	private sealed class TimeOnlyTypeHandler : SqlMapper.TypeHandler<TimeOnly>
+	{
+		public override TimeOnly Parse(object value) => value switch
+		{
+			TimeOnly time => time,
+			TimeSpan timeSpan => TimeOnly.FromTimeSpan(timeSpan),
+			DateTime dateTime => TimeOnly.FromDateTime(dateTime),
+			_ => TimeOnly.Parse(value.ToString()!)
+		};
+
+		public override void SetValue(IDbDataParameter parameter, TimeOnly value)
+		{
+			parameter.DbType = DbType.Time;
+			parameter.Value = value.ToTimeSpan();
 		}
 	}
 }

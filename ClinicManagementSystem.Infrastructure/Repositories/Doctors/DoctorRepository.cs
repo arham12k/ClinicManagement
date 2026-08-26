@@ -46,9 +46,10 @@ INSERT INTO Doctors
     Registration_State,
     Specialization,
     Sub_Specialization,
-    Experience_Years,
+    Experience,
     Qualification,
     Consultation_Fees,
+    Available_Days,
     Is_Active,
     Created_On
 )
@@ -65,9 +66,10 @@ VALUES
     @RegistrationState,
     @Specialization,
     @SubSpecialization,
-    @ExperienceYears,
+    @Experience,
     @Qualification,
     @ConsultationFees,
+    @AvailableDays,
     @IsActive,
     @CreatedOn
 );";
@@ -121,7 +123,25 @@ VALUES
 			using var connection = _context.CreateConnection();
 
 			const string sql = @"
-SELECT *
+SELECT
+    Doctor_Id AS DoctorId,
+    Clinic_Id AS ClinicId,
+    Full_Name AS FullName,
+    Date_Of_Birth AS DateOfBirth,
+    Gender,
+    Mobile_Number AS MobileNumber,
+    Address,
+    Medical_Registration_Number AS MedicalRegistrationNumber,
+    Registration_State AS RegistrationState,
+    Specialization,
+    Sub_Specialization AS SubSpecialization,
+    Experience,
+    Qualification,
+    Consultation_Fees AS ConsultationFees,
+    Available_Days AS AvailableDays,
+    Is_Active AS IsActive,
+    Created_On AS CreatedOn,
+    Updated_On AS UpdatedOn
 FROM Doctors
 WHERE Is_Active = TRUE
 ORDER BY Full_Name;";
@@ -134,7 +154,25 @@ ORDER BY Full_Name;";
 			using var connection = _context.CreateConnection();
 
 			const string sql = @"
-SELECT *
+SELECT
+    Doctor_Id AS DoctorId,
+    Clinic_Id AS ClinicId,
+    Full_Name AS FullName,
+    Date_Of_Birth AS DateOfBirth,
+    Gender,
+    Mobile_Number AS MobileNumber,
+    Address,
+    Medical_Registration_Number AS MedicalRegistrationNumber,
+    Registration_State AS RegistrationState,
+    Specialization,
+    Sub_Specialization AS SubSpecialization,
+    Experience,
+    Qualification,
+    Consultation_Fees AS ConsultationFees,
+    Available_Days AS AvailableDays,
+    Is_Active AS IsActive,
+    Created_On AS CreatedOn,
+    Updated_On AS UpdatedOn
 FROM Doctors
 WHERE Doctor_Id = @DoctorId AND Is_Active = TRUE;";
 
@@ -149,7 +187,25 @@ WHERE Doctor_Id = @DoctorId AND Is_Active = TRUE;";
 			using var connection = _context.CreateConnection();
 
 			const string sql = @"
-SELECT *
+SELECT
+    Doctor_Id AS DoctorId,
+    Clinic_Id AS ClinicId,
+    Full_Name AS FullName,
+    Date_Of_Birth AS DateOfBirth,
+    Gender,
+    Mobile_Number AS MobileNumber,
+    Address,
+    Medical_Registration_Number AS MedicalRegistrationNumber,
+    Registration_State AS RegistrationState,
+    Specialization,
+    Sub_Specialization AS SubSpecialization,
+    Experience,
+    Qualification,
+    Consultation_Fees AS ConsultationFees,
+    Available_Days AS AvailableDays,
+    Is_Active AS IsActive,
+    Created_On AS CreatedOn,
+    Updated_On AS UpdatedOn
 FROM Doctors
 WHERE Medical_Registration_Number=@RegistrationNumber AND Is_Active = TRUE
 LIMIT 1;";
@@ -177,6 +233,7 @@ LIMIT 1;";
 				const string updateDoctorSql = @"
 UPDATE Doctors
 SET
+    Clinic_Id=@ClinicId,
     Full_Name=@FullName,
     Date_Of_Birth=@DateOfBirth,
     Gender=@Gender,
@@ -185,9 +242,10 @@ SET
     Registration_State=@RegistrationState,
     Specialization=@Specialization,
     Sub_Specialization=@SubSpecialization,
-    Experience_Years=@ExperienceYears,
+    Experience=@Experience,
     Qualification=@Qualification,
     Consultation_Fees=@ConsultationFees,
+    Available_Days=@AvailableDays,
     Updated_On=@UpdatedOn
 WHERE Doctor_Id=@DoctorId;";
 
@@ -275,10 +333,16 @@ WHERE Doctor_Id = @DoctorId AND Is_Active = TRUE;";
 			using var connection = _context.CreateConnection();
 
 			const string sql = @"
-        SELECT *
-        FROM Doctor_Availability
-        WHERE Doctor_Id = @DoctorId
-        ORDER BY Session_Type, Day_Of_Week;";
+SELECT
+    Availability_Id AS AvailabilityId,
+    Doctor_Id AS DoctorId,
+    Session_Type AS SessionType,
+    Day_Of_Week AS DayOfWeek,
+    From_Time AS FromTime,
+    To_Time AS ToTime
+FROM Doctor_Availability
+WHERE Doctor_Id = @DoctorId
+ORDER BY Session_Type, Day_Of_Week;";
 
 			return await connection.QueryAsync<DoctorAvailability>(
 				sql,
