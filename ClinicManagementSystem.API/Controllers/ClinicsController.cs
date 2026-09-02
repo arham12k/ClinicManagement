@@ -25,6 +25,7 @@ public class ClinicsController : ControllerBase
 			new { clinicId },
 			new
 			{
+				success = true,
 				clinicId,
 				message = "Clinic registered successfully."
 			});
@@ -41,7 +42,9 @@ public class ClinicsController : ControllerBase
 	{
 		var clinic = await _clinicService.GetByIdAsync(clinicId);
 
-		return clinic == null ? NotFound() : Ok(clinic);
+		return clinic == null
+			? NotFound(new { success = false, message = "Clinic not found." })
+			: Ok(clinic);
 	}
 
 	[HttpPut("{clinicId:guid}")]
@@ -49,7 +52,9 @@ public class ClinicsController : ControllerBase
 	{
 		var updated = await _clinicService.UpdateAsync(clinicId, request);
 
-		return updated ? NoContent() : NotFound();
+		return updated
+			? Ok(new { success = true, message = "Clinic updated successfully." })
+			: NotFound(new { success = false, message = "Clinic not found." });
 	}
 
 	[HttpDelete("{clinicId:guid}")]
@@ -57,6 +62,8 @@ public class ClinicsController : ControllerBase
 	{
 		var deleted = await _clinicService.DeleteAsync(clinicId);
 
-		return deleted ? NoContent() : NotFound();
+		return deleted
+			? Ok(new { success = true, message = "Clinic deleted successfully." })
+			: NotFound(new { success = false, message = "Clinic not found." });
 	}
 }

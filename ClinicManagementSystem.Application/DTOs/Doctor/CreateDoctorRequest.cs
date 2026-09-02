@@ -6,8 +6,6 @@ namespace ClinicManagementSystem.Application.DTOs.Doctor
 {
 	public class CreateDoctorRequest
 	{
-		public Guid? ClinicId { get; set; }
-
 		public string FullName { get; set; } = string.Empty;
 
 		public DateOnly? DateOfBirth { get; set; }

@@ -118,7 +118,7 @@ VALUES
 			}
 		}
 
-		public async Task<IEnumerable<Doctor>> GetAllAsync()
+		public async Task<IEnumerable<Doctor>> GetAllAsync(Guid clinicId)
 		{
 			using var connection = _context.CreateConnection();
 
@@ -143,13 +143,13 @@ SELECT
     Created_On AS CreatedOn,
     Updated_On AS UpdatedOn
 FROM Doctors
-WHERE Is_Active = TRUE
+WHERE Is_Active = TRUE AND Clinic_Id = @ClinicId
 ORDER BY Full_Name;";
 
-			return await connection.QueryAsync<Doctor>(sql);
+			return await connection.QueryAsync<Doctor>(sql, new { ClinicId = clinicId });
 		}
 
-		public async Task<Doctor?> GetByIdAsync(Guid doctorId)
+		public async Task<Doctor?> GetByIdAsync(Guid doctorId, Guid clinicId)
 		{
 			using var connection = _context.CreateConnection();
 
@@ -174,11 +174,11 @@ SELECT
     Created_On AS CreatedOn,
     Updated_On AS UpdatedOn
 FROM Doctors
-WHERE Doctor_Id = @DoctorId AND Is_Active = TRUE;";
+WHERE Doctor_Id = @DoctorId AND Clinic_Id = @ClinicId AND Is_Active = TRUE;";
 
 			return await connection.QueryFirstOrDefaultAsync<Doctor>(
 				sql,
-				new { DoctorId = doctorId });
+				new { DoctorId = doctorId, ClinicId = clinicId });
 		}
 
 		public async Task<Doctor?> GetByMedicalRegistrationNumberAsync(
@@ -220,7 +220,8 @@ LIMIT 1;";
 
 		public async Task<bool> UpdateAsync(
 			Doctor doctor,
-			List<DoctorAvailability> availability)
+			List<DoctorAvailability> availability,
+			Guid clinicId)
 		{
 			using var connection = _context.CreateConnection();
 
@@ -233,7 +234,6 @@ LIMIT 1;";
 				const string updateDoctorSql = @"
 UPDATE Doctors
 SET
-    Clinic_Id=@ClinicId,
     Full_Name=@FullName,
     Date_Of_Birth=@DateOfBirth,
     Gender=@Gender,
@@ -247,11 +247,14 @@ SET
     Consultation_Fees=@ConsultationFees,
     Available_Days=@AvailableDays,
     Updated_On=@UpdatedOn
-WHERE Doctor_Id=@DoctorId;";
+WHERE Doctor_Id=@DoctorId AND Clinic_Id=@FilterClinicId;";
+
+				var parameters = new Dapper.DynamicParameters(doctor);
+				parameters.Add("FilterClinicId", clinicId);
 
 				var affectedRows = await connection.ExecuteAsync(
 					updateDoctorSql,
-					doctor,
+					parameters,
 					transaction);
 
 				if (affectedRows == 0)
@@ -311,7 +314,7 @@ VALUES
 			}
 		}
 
-		public async Task<bool> DeleteAsync(Guid doctorId)
+		public async Task<bool> DeleteAsync(Guid doctorId, Guid clinicId)
 		{
 			using var connection = _context.CreateConnection();
 
@@ -320,11 +323,11 @@ UPDATE Doctors
 SET
     Is_Active = FALSE,
     Updated_On = @UpdatedOn
-WHERE Doctor_Id = @DoctorId AND Is_Active = TRUE;";
+WHERE Doctor_Id = @DoctorId AND Clinic_Id = @ClinicId AND Is_Active = TRUE;";
 
 			return await connection.ExecuteAsync(
 				sql,
-				new { DoctorId = doctorId, UpdatedOn = DateTime.UtcNow }) > 0;
+				new { DoctorId = doctorId, ClinicId = clinicId, UpdatedOn = DateTime.UtcNow }) > 0;
 		}
 
 

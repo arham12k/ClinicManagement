@@ -9,14 +9,14 @@ namespace ClinicManagementSystem.Application.Interfaces.Doctors
 {
 	public interface IDoctorService
 	{
-		Task<Guid> CreateAsync(CreateDoctorRequest request);
+		Task<Guid> CreateAsync(Guid clinicId, CreateDoctorRequest request);
 
-		Task<IEnumerable<DoctorResponse>> GetAllAsync();
+		Task<IEnumerable<DoctorResponse>> GetAllAsync(Guid clinicId);
 
-		Task<DoctorResponse?> GetByIdAsync(Guid doctorId);
+		Task<DoctorResponse?> GetByIdAsync(Guid doctorId, Guid clinicId);
 
-		Task<bool> UpdateAsync(Guid doctorId, UpdateDoctorRequest request);
+		Task<bool> UpdateAsync(Guid doctorId, Guid clinicId, UpdateDoctorRequest request);
 
-		Task<bool> DeleteAsync(Guid doctorId);
+		Task<bool> DeleteAsync(Guid doctorId, Guid clinicId);
 	}
 }

@@ -22,16 +22,15 @@ namespace ClinicManagementSystem.Application.Services.Doctors
 			_clinicRepository = clinicRepository;
 		}
 
-		public async Task<Guid> CreateAsync(CreateDoctorRequest request)
+		public async Task<Guid> CreateAsync(Guid clinicId, CreateDoctorRequest request)
 		{
-			// Check if clinic exists (only if ClinicId is provided)
-			if (request.ClinicId.HasValue && request.ClinicId.Value != Guid.Empty)
-			{
-				var clinic = await _clinicRepository.GetByIdAsync(request.ClinicId.Value);
+			if (clinicId == Guid.Empty)
+				throw new Exception("ClinicId is required.");
 
-				if (clinic == null)
-					throw new Exception("Clinic not found.");
-			}
+			var clinic = await _clinicRepository.GetByIdAsync(clinicId);
+
+			if (clinic == null)
+				throw new Exception("Clinic not found.");
 
 			// Check duplicate registration number
 			if (!string.IsNullOrWhiteSpace(request.MedicalRegistrationNumber))
@@ -50,7 +49,7 @@ namespace ClinicManagementSystem.Application.Services.Doctors
 			var doctor = new Doctor
 			{
 				DoctorId = Guid.NewGuid(),
-				ClinicId = request.ClinicId,
+				ClinicId = clinicId,
 				FullName = request.FullName,
 				DateOfBirth = request.DateOfBirth,
 				Gender = request.Gender,
@@ -78,9 +77,9 @@ namespace ClinicManagementSystem.Application.Services.Doctors
 				availability);
 		}
 
-		public async Task<IEnumerable<DoctorResponse>> GetAllAsync()
+		public async Task<IEnumerable<DoctorResponse>> GetAllAsync(Guid clinicId)
 		{
-			var doctors = await _doctorRepository.GetAllAsync();
+			var doctors = await _doctorRepository.GetAllAsync(clinicId);
 
 			var response = new List<DoctorResponse>();
 
@@ -94,9 +93,9 @@ namespace ClinicManagementSystem.Application.Services.Doctors
 			return response;
 		}
 
-		public async Task<DoctorResponse?> GetByIdAsync(Guid doctorId)
+		public async Task<DoctorResponse?> GetByIdAsync(Guid doctorId, Guid clinicId)
 		{
-			var doctor = await _doctorRepository.GetByIdAsync(doctorId);
+			var doctor = await _doctorRepository.GetByIdAsync(doctorId, clinicId);
 
 			if (doctor == null)
 				return null;
@@ -108,17 +107,13 @@ namespace ClinicManagementSystem.Application.Services.Doctors
 
 		public async Task<bool> UpdateAsync(
 			Guid doctorId,
+			Guid clinicId,
 			UpdateDoctorRequest request)
 		{
-			var doctor = await _doctorRepository.GetByIdAsync(doctorId);
+			var doctor = await _doctorRepository.GetByIdAsync(doctorId, clinicId);
 
 			if (doctor == null)
 				return false;
-
-			if (request.ClinicId.HasValue && request.ClinicId.Value != Guid.Empty)
-			{
-				doctor.ClinicId = request.ClinicId;
-			}
 
 			var availableDaysStr = request.AvailableDays != null && request.AvailableDays.Any()
 				? string.Join(",", request.AvailableDays)
@@ -145,12 +140,13 @@ namespace ClinicManagementSystem.Application.Services.Doctors
 
 			return await _doctorRepository.UpdateAsync(
 				doctor,
-				availability);
+				availability,
+				clinicId);
 		}
 
-		public async Task<bool> DeleteAsync(Guid doctorId)
+		public async Task<bool> DeleteAsync(Guid doctorId, Guid clinicId)
 		{
-			return await _doctorRepository.DeleteAsync(doctorId);
+			return await _doctorRepository.DeleteAsync(doctorId, clinicId);
 		}
 
 		private List<DoctorAvailability> BuildAvailability(
