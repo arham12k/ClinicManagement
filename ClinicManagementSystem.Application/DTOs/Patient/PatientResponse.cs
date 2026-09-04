@@ -4,6 +4,7 @@ public class PatientResponse
 {
 	public Guid PatientId { get; set; }
 	public Guid ClinicId { get; set; }
+	public Guid? DoctorId { get; set; }
 	public string PatientToken { get; set; } = string.Empty;
 	public string FullName { get; set; } = string.Empty;
 	public int Age { get; set; }
@@ -19,5 +20,7 @@ public class PatientResponse
 	public string GestationalAge { get; set; } = string.Empty;
 	public DateOnly? ExpectedDeliveryDate { get; set; }
 	public string Trimester { get; set; } = string.Empty;
+	public DateTime? LastVisitDate { get; set; }
+	public int TotalVisits { get; set; }
 	public List<PatientVisitResponse> Visits { get; set; } = [];
 }

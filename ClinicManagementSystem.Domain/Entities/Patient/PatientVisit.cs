@@ -4,6 +4,7 @@ public class PatientVisit
 {
 	public Guid PatientVisitId { get; set; }
 	public Guid PatientId { get; set; }
+	public Guid? DoctorId { get; set; }
 	public string VisitPriority { get; set; } = string.Empty;
 	public string BloodPressure { get; set; } = string.Empty;
 	public string SugarLevel { get; set; } = string.Empty;

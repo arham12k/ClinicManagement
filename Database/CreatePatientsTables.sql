@@ -2,6 +2,7 @@ CREATE TABLE Patients
 (
     Patient_Id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     Clinic_Id UUID NOT NULL,
+	Doctor_Id UUID NULL,
     Patient_Token VARCHAR(40) NOT NULL UNIQUE,
     Full_Name VARCHAR(150) NOT NULL,
     Age INT NOT NULL,
@@ -23,13 +24,18 @@ CREATE TABLE Patients
     CONSTRAINT FK_Patient_Clinic
         FOREIGN KEY (Clinic_Id)
         REFERENCES Clinics(Clinic_Id)
-        ON DELETE RESTRICT
+        ON DELETE RESTRICT,
+    CONSTRAINT FK_Patient_Doctor
+        FOREIGN KEY (Doctor_Id)
+        REFERENCES Doctors(Doctor_Id)
+        ON DELETE SET NULL
 );
 
 CREATE TABLE Patient_Visits
 (
     Patient_Visit_Id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     Patient_Id UUID NOT NULL,
+    Doctor_Id UUID NULL,
     Visit_Priority VARCHAR(20) NOT NULL,
     Blood_Pressure VARCHAR(20),
     Sugar_Level VARCHAR(20),
@@ -43,8 +49,14 @@ CREATE TABLE Patient_Visits
     CONSTRAINT FK_PatientVisit_Patient
         FOREIGN KEY (Patient_Id)
         REFERENCES Patients(Patient_Id)
-        ON DELETE RESTRICT
+        ON DELETE RESTRICT,
+    CONSTRAINT FK_PatientVisit_Doctor
+        FOREIGN KEY (Doctor_Id)
+        REFERENCES Doctors(Doctor_Id)
+        ON DELETE SET NULL
 );
 
 CREATE INDEX IX_Patients_Clinic_Id ON Patients(Clinic_Id);
+CREATE INDEX IX_Patients_Doctor_Id ON Patients(Doctor_Id);
 CREATE INDEX IX_Patient_Visits_Patient_Id_Created_On ON Patient_Visits(Patient_Id, Created_On DESC);
+CREATE INDEX IX_Patient_Visits_Doctor_Id ON Patient_Visits(Doctor_Id);

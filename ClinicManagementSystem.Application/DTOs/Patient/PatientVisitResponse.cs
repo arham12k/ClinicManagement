@@ -3,6 +3,7 @@ namespace ClinicManagementSystem.Application.DTOs.Patient;
 public class PatientVisitResponse
 {
 	public Guid PatientVisitId { get; set; }
+	public Guid? DoctorId { get; set; }
 	public string VisitPriority { get; set; } = string.Empty;
 	public string BloodPressure { get; set; } = string.Empty;
 	public string SugarLevel { get; set; } = string.Empty;

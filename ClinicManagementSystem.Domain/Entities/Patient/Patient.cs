@@ -6,6 +6,7 @@ public class Patient : AuditableEntity
 {
 	public Guid PatientId { get; set; }
 	public Guid ClinicId { get; set; }
+	public Guid? DoctorId { get; set; }
 	public string PatientToken { get; set; } = string.Empty;
 	public string FullName { get; set; } = string.Empty;
 	public int Age { get; set; }

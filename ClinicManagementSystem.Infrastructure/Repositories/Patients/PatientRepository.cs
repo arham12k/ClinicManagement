@@ -22,17 +22,19 @@ public class PatientRepository : IPatientRepository
 
 		try
 		{
+			patient.PatientToken = await GeneratePatientTokenAsync(connection, transaction, firstVisit.VisitPriority);
+
 			const string patientSql = @"
 INSERT INTO Patients
 (
-    Patient_Id, Clinic_Id, Patient_Token, Full_Name, Age, Gender, Mobile_Number,
+	Patient_Id, Clinic_Id, Doctor_Id, Patient_Token, Full_Name, Age, Gender, Mobile_Number,
     Address, Allergies, Existing_Diseases, Current_Medications, Past_Surgeries,
     Anc_Profile, Lmp_Date, Gestational_Age, Expected_Delivery_Date, Trimester,
     Is_Active, Created_On
 )
 VALUES
 (
-    @PatientId, @ClinicId, @PatientToken, @FullName, @Age, @Gender, @MobileNumber,
+	@PatientId, @ClinicId, @DoctorId, @PatientToken, @FullName, @Age, @Gender, @MobileNumber,
     @Address, @Allergies, @ExistingDiseases, @CurrentMedications, @PastSurgeries,
     @AncProfile, @LmpDate, @GestationalAge, @ExpectedDeliveryDate, @Trimester,
     @IsActive, @CreatedOn
@@ -51,17 +53,19 @@ VALUES
 		}
 	}
 
-	public async Task<IEnumerable<Patient>> GetAllAsync()
+	public async Task<IEnumerable<Patient>> GetAllAsync(Guid clinicId, Guid? doctorId)
 	{
 		using var connection = _context.CreateConnection();
 
 		const string sql = @"
 SELECT *
-FROM Patients
-WHERE Is_Active = TRUE
+FROM Patients p
+WHERE p.Clinic_Id = @ClinicId
+	AND p.Is_Active = TRUE
+	AND (@DoctorId IS NULL OR p.Doctor_Id = @DoctorId)
 ORDER BY Created_On DESC;";
 
-		return await connection.QueryAsync<Patient>(sql);
+		return await connection.QueryAsync<Patient>(sql, new { ClinicId = clinicId, DoctorId = doctorId });
 	}
 
 	public async Task<Patient?> GetByIdAsync(Guid patientId)
@@ -74,6 +78,21 @@ FROM Patients
 WHERE Patient_Id = @PatientId AND Is_Active = TRUE;";
 
 		return await connection.QueryFirstOrDefaultAsync<Patient>(sql, new { PatientId = patientId });
+	}
+
+	public async Task<Patient?> GetByNameAndMobileNumberAsync(Guid clinicId, string fullName, string mobileNumber)
+	{
+		using var connection = _context.CreateConnection();
+
+		const string sql = @"
+SELECT *
+FROM Patients
+WHERE Clinic_Id = @ClinicId
+  AND Is_Active = TRUE
+  AND LOWER(Full_Name) = LOWER(@FullName)
+  AND Mobile_Number = @MobileNumber;";
+
+		return await connection.QueryFirstOrDefaultAsync<Patient>(sql, new { ClinicId = clinicId, FullName = fullName.Trim(), MobileNumber = mobileNumber.Trim() });
 	}
 
 	public async Task<IEnumerable<PatientVisit>> GetVisitsAsync(Guid patientId)
@@ -148,15 +167,31 @@ WHERE Patient_Id = @PatientId AND Is_Active = TRUE;";
 		const string sql = @"
 INSERT INTO Patient_Visits
 (
-    Patient_Visit_Id, Patient_Id, Visit_Priority, Blood_Pressure, Sugar_Level,
+	Patient_Visit_Id, Patient_Id, Doctor_Id, Visit_Priority, Blood_Pressure, Sugar_Level,
     Weight, Height, Temperature, Pulse_Rate, Sp_O2, Respiratory_Rate, Created_On
 )
 VALUES
 (
-    @PatientVisitId, @PatientId, @VisitPriority, @BloodPressure, @SugarLevel,
+	@PatientVisitId, @PatientId, @DoctorId, @VisitPriority, @BloodPressure, @SugarLevel,
     @Weight, @Height, @Temperature, @PulseRate, @SpO2, @RespiratoryRate, @CreatedOn
 );";
 
 		await connection.ExecuteAsync(sql, visit, transaction);
+	}
+
+	private static async Task<string> GeneratePatientTokenAsync(
+		System.Data.IDbConnection connection,
+		System.Data.IDbTransaction transaction,
+		string visitPriority)
+	{
+		var prefix = visitPriority == "Emergency" ? "E" : "T";
+		await connection.ExecuteAsync("SELECT pg_advisory_xact_lock(hashtext(@Prefix));", new { Prefix = prefix }, transaction);
+
+		var nextNumber = await connection.QuerySingleAsync<int>(@"
+SELECT COALESCE(MAX(CAST(SUBSTRING(Patient_Token FROM 2) AS INTEGER)), 0) + 1
+FROM Patients
+WHERE Patient_Token LIKE @Pattern;", new { Pattern = $"{prefix}%" }, transaction);
+
+		return $"{prefix}{nextNumber:D3}";
 	}
 }

@@ -15,10 +15,19 @@ public class PatientsController : ControllerBase
 		_patientService = patientService;
 	}
 
+	private const string ClinicIdHeader = "X-Clinic-Id";
+	private const string DoctorIdHeader = "X-Doctor-Id";
+
 	[HttpPost]
-	public async Task<IActionResult> Register(RegisterPatientRequest request)
+	public async Task<IActionResult> Register(
+		[FromHeader(Name = ClinicIdHeader)] Guid clinicId,
+		[FromHeader(Name = DoctorIdHeader)] Guid? doctorId,
+		RegisterPatientRequest request)
 	{
-		var result = await _patientService.RegisterAsync(request);
+		if (clinicId == Guid.Empty)
+			return BadRequest(new { success = false, message = $"{ClinicIdHeader} header is required." });
+
+		var result = await _patientService.RegisterAsync(clinicId, doctorId, request);
 
 		return CreatedAtAction(nameof(GetById), new { patientId = result.PatientId }, new
 		{
@@ -30,7 +39,15 @@ public class PatientsController : ControllerBase
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> GetAll() => Ok(await _patientService.GetAllAsync());
+	public async Task<IActionResult> GetAll(
+		[FromHeader(Name = ClinicIdHeader)] Guid clinicId,
+		[FromHeader(Name = DoctorIdHeader)] Guid? doctorId)
+	{
+		if (clinicId == Guid.Empty)
+			return BadRequest(new { success = false, message = $"{ClinicIdHeader} header is required." });
+
+		return Ok(await _patientService.GetAllAsync(clinicId, doctorId));
+	}
 
 	[HttpGet("{patientId:guid}")]
 	public async Task<IActionResult> GetById(Guid patientId)
@@ -69,9 +86,12 @@ public class PatientsController : ControllerBase
 	}
 
 	[HttpPost("{patientId:guid}/visits")]
-	public async Task<IActionResult> AddVisit(Guid patientId, CreatePatientVisitRequest request)
+	public async Task<IActionResult> AddVisit(
+		Guid patientId,
+		[FromHeader(Name = DoctorIdHeader)] Guid? doctorId,
+		CreatePatientVisitRequest request)
 	{
-		var visitId = await _patientService.CreateVisitAsync(patientId, request);
+		var visitId = await _patientService.CreateVisitAsync(patientId, doctorId, request);
 		return visitId == null
 			? NotFound(new { success = false, message = "Patient not found." })
 			: CreatedAtAction(nameof(GetVisits), new { patientId }, new { success = true, PatientVisitId = visitId, message = "Visit added successfully." });
